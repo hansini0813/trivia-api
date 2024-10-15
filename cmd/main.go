@@ -1,11 +1,18 @@
+// This declares the package that this file belongs to. In Go, every Go file must belong to a package.
+// The main package is special in Go because it tells the Go compiler that this is the entry point of the program, meaning this is where execution starts.
+// the main() function inside this pakcage will be he first function to run when the program is executed.
 package main
 
 import (
+	// imports the fiber package . popular web framework!  It’s used to handle web requests and responses
 	"github.com/gofiber/fiber/v2"
-	"github.com/hansini0813/divrhino-trivia/database"
+	// responsible for handling the database connection logic.
+	"github.com/hansini0813/trivia-api/database"
 )
 
+// main funciton is required to be inside the main package.
 func main() {
+	// This calls a function named ConnectDb() from the database package that you imported earlier.
 	database.ConnectDb()
 	app := fiber.New()
 

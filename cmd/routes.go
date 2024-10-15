@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/hansini0813/divrhino-trivia/handlers"
+	"github.com/hansini0813/trivia-api/handlers"
 )
 
 func setuoRoutes(app *fiber.App) {

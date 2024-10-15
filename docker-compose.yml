@@ -1,24 +1,47 @@
+# This is a Docker Compose file, written in YAML format, which helps you run multiple services (like your Go app and a PostgreSQL database) together in separate containers. 
+# Docker Compose allows you to define everything your application needs in one file and run it all with a single command.
+# version of Docker Compose. tells Docker how to interpret the file. 
 version: '3.8'
 
+# the services (different parts) of your application. Each service runs in its own container. In this case, you have two services: web (your Go application), db (the PostgreSQL database)
 services:
+# this is the web service of your application. This will run the code I write in go. 
   web:
+  # tells docker to build the webservices from the currect directory which is indicated by the '.'
     build: .
+    # tells docker to look for a .env file. It's a file that contains environment variables. (like secrets or configuration data). In your case, it might contain things like database usernames and passwords. Docker will read this file and make the environment variables available inside the container.
     env_file: 
       - .env
+    # maps port 3000 on my computer to port 3000 inside the docker container. 
     ports:
       - "3000:3000"
+    # This mounts the current directory (.) on your computer to /usr/src/app inside the container. allows code to be shared  between your computer and the container. This means when you change the code on your computer, the changes are also reflected inside the running container. 
+    # This means when you change the code on your computer, the changes are also reflected inside the running container. You don’t have to stop and rebuild the container every time you make a change.
     volumes:
       - .:/usr/src/app
+
+    # air is a tool that automatically restarts your Go app when it detects changes to your code. It makes development faster because you don’t have to manually restart the app every time you make a change.
     command: air cmd/main.go -b 0.0.0.0
 
+# This part sets up a PostgreSQL database (a relational database management system)                                                                                                                   
   db:
+    # explanation: This section sets environment variables inside the PostgreSQL container.
+    # What's Happening: The postgres:alpine image is a lightweight version of PostgreSQL, based on Alpine Linux, which makes it smaller and faster to download.
     image: postgres:alpine
+#   The environment variables configure the database with a username, password, and database name.
+#   POSTGRES_USER: This sets the PostgreSQL username (read from the .env file using ${DB_USER}).
+#   POSTGRES_PASSWORD: This sets the password for the PostgreSQL user (read from the .env file using ${DB_PASSWORD}).
+#   POSTGRES_DB: This sets the name of the default database (read from the .env file using ${DB_NAME}).
     environment: 
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+
+    # This maps port 5432 on your local machine to port 5432 inside the PostgreSQL container. PostgreSQL runs on port 5432 by default. Mapping this port allows your Go application (or tools like pgAdmin) to connect to the database from your machine.
     ports: 
       - "5432:5432"
+
+    # Volumes in Docker allow data to persist even after the container stops. Without this, every time the container stops, the database data would be lost. Here, postgres-db is the name of the volume, and /var/lib/postgresql/data is where PostgreSQL stores its data inside the container.
     volumes: 
       - postgres-db:/var/lib/postgresql/data
 

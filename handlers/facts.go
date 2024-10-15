@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/hansini0813/divrhino-trivia/database"
-	"github.com/hansini0813/divrhino-trivia/models"
+	"github.com/hansini0813/trivia-api/database"
+	"github.com/hansini0813/trivia-api/models"
 )
 
 func ListFacts(c *fiber.Ctx) error {
