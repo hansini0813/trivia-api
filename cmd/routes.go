@@ -14,6 +14,16 @@ func setupRoutes(app *fiber.App) {
 
 	// Route to delete all facts
 	app.Delete("/facts", handlers.DeleteAllFacts)
+
 	// Route to delete selected facts
 	app.Post("/facts/delete", handlers.DeleteSelectedFacts)
+
+	// Add new route to show single Fact, given `:id`
+	app.Get("/fact/:id", handlers.ShowFact)
+
+	// Display `Edit` form
+	app.Get("/fact/:id/edit", handlers.EditFact)
+
+	// Update fact
+	app.Patch("/fact/:id", handlers.UpdateFact)
 }

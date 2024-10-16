@@ -9,6 +9,7 @@ import (
 	// responsible for handling the database connection logic.
 	"github.com/gofiber/template/html/v2"
 	"github.com/hansini0813/trivia-api/database"
+	"github.com/hansini0813/trivia-api/handlers"
 )
 
 // main funciton is required to be inside the main package.
@@ -24,6 +25,9 @@ func main() {
 	setupRoutes(app)
 
 	app.Static("/", "./public")
+
+	// Set up 404 page
+	app.Use(handlers.NotFound)
 
 	app.Listen(":3000")
 }

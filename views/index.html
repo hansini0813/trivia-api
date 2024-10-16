@@ -20,6 +20,10 @@
         <div>
             <button type="button" id="delete-selected-facts">Delete Selected Facts</button>
         </div>
+        <!-- Button to edit selected facts -->
+        <div>
+            <button type="button" id="edit-selected-facts">Edit Selected Facts</button>
+        </div>
     {{else}}
         <div>
             <p>No facts yet!</p>
@@ -84,5 +88,28 @@
                 console.error('Error:', error);
             });
         }
+    });
+</script>
+
+<script>
+    document.getElementById('edit-selected-facts').addEventListener('click', function() {
+        // Get the selected facts
+        const selectedFacts = Array.from(document.querySelectorAll('input[name="fact"]:checked'))
+            .map(checkbox => checkbox.value); // Collect selected fact IDs
+        
+        console.log(selectedFacts); // Log the selected fact IDs
+
+        // Ensure only one fact is selected
+        if (selectedFacts.length !== 1) {
+            alert('Please select only one fact to edit at a time.');
+            return;
+        }
+
+        // Redirect to the edit page for the selected fact
+        const factId = selectedFacts[0]; // Get the single selected fact's ID
+        const editUrl = `/fact/${factId}/edit`; // Construct the URL for editing the fact
+
+        console.log(`Redirecting to: ${editUrl}`);
+        window.location.href = editUrl; // Redirect the user to the edit page
     });
 </script>
