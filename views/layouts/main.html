@@ -1,0 +1,15 @@
+<head>
+    <title>Trivia</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="style/main.css?=1">
+</head>
+<body>
+    <div class="wrapper">
+        {{template "header" .}} <!-- import partial -->
+        <h1>{{.Title}}</h1>
+        <h2> 
+            {{.Subtitle}}
+        </h2>
+        {{embed}}
+    </div>
+</body>

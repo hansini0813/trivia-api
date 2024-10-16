@@ -7,6 +7,7 @@ import (
 	// imports the fiber package . popular web framework!  It’s used to handle web requests and responses
 	"github.com/gofiber/fiber/v2"
 	// responsible for handling the database connection logic.
+	"github.com/gofiber/template/html/v2"
 	"github.com/hansini0813/trivia-api/database"
 )
 
@@ -14,9 +15,15 @@ import (
 func main() {
 	// This calls a function named ConnectDb() from the database package that you imported earlier.
 	database.ConnectDb()
-	app := fiber.New()
+	engine := html.New("./views", ".html")
+	app := fiber.New(fiber.Config{
+		Views:       engine,
+		ViewsLayout: "layouts/main",
+	})
 
-	setuoRoutes(app)
+	setupRoutes(app)
+
+	app.Static("/", "./public")
 
 	app.Listen(":3000")
 }

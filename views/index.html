@@ -1,0 +1,88 @@
+<div>
+    {{if .Facts}}
+        {{ range .Facts }}
+        <div>
+            <input type="checkbox" name="fact" value="{{ .ID }}"> <!-- Checkbox with fact ID -->
+            <p><strong>Question:</strong> {{ .Question }}</p>
+            <p><strong>Answer:</strong> {{ .Answer }}</p>
+        </div>
+        {{ end }}
+        <div>
+            <a href="/fact">
+                <span>+ New Fact</span>
+            </a>
+        </div>
+        <!-- Button to delete all facts -->
+        <div>
+            <button id="delete-facts">Delete All Facts</button>
+        </div>
+        <!-- Button to delete selected facts -->
+        <div>
+            <button type="button" id="delete-selected-facts">Delete Selected Facts</button>
+        </div>
+    {{else}}
+        <div>
+            <p>No facts yet!</p>
+            <p><a href="/fact"> Add new Fact!</a></p>
+        </div>
+    {{end}}
+</div>
+
+<!-- JavaScript for deleting all facts -->
+<script>
+    document.getElementById('delete-facts').addEventListener('click', function() {
+        if (confirm("Are you sure you want to delete all facts?")) {
+            fetch('/facts', {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    alert('All facts have been deleted!');
+                    window.location.reload(); // Reload the page after deletion
+                } else {
+                    alert('Failed to delete facts.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+</script>
+
+<script>
+    document.getElementById('delete-selected-facts').addEventListener('click', function() {
+        const selectedFacts = Array.from(document.querySelectorAll('input[name="fact"]:checked'))
+            .map(checkbox => checkbox.value); // Collect selected fact IDs
+
+        console.log(selectedFacts); // Log the selected fact IDs
+
+        if (selectedFacts.length === 0) {
+            alert('Please select at least one fact to delete.');
+            return;
+        }
+
+        if (confirm("Are you sure you want to delete the selected facts?")) {
+            const bodyData = JSON.stringify({
+                ids: selectedFacts.map(Number) // Convert the selected fact IDs to numbers
+            });
+
+            console.log("Request body to be sent:", bodyData); // Log the request body before sending it
+
+            fetch('/facts/delete', { // Make sure to match this with the route
+                method: 'POST', // Using POST because DELETE doesn't support a body in HTML forms
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: bodyData, // Send the JSON data
+            }).then(response => {
+                if (response.ok) {
+                    alert('Selected facts have been deleted!');
+                    window.location.reload(); // Reload the page after deletion
+                } else {
+                    alert('Failed to delete facts.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+</script>
